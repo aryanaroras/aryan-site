@@ -9,8 +9,9 @@ const LINKEDIN_ANDROID_INTENT =
   `intent://in/${LINKEDIN_PROFILE}#Intent;package=com.linkedin.android;scheme=linkedin;` +
   `S.browser_fallback_url=${encodeURIComponent(LINKEDIN_URL)};end`;
 
-// Temporary: redirects to LinkedIn until the real linktree page is built here.
-export default function ConnectPage() {
+// This route is baked into the printed QR code, so its path must never change.
+// It always redirects (currently to LinkedIn); what it redirects to can evolve.
+export default function QrConnectPage() {
   useEffect(() => {
     const ua = navigator.userAgent;
     const isAndroid = /Android/i.test(ua);
