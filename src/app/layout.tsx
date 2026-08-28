@@ -38,6 +38,27 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${craftedScript.variable} h-full antialiased`}
     >
+      <head>
+        {/*
+          GitHub Pages serves static files only — it can't send custom HTTP
+          response headers, so CSP/referrer-policy are set via <meta> here
+          instead. That means header-only protections (X-Frame-Options,
+          Permissions-Policy, HSTS) aren't achievable this way; if that
+          matters, put Cloudflare (free tier) in front of the domain, since
+          it can inject real response headers and a WAF at the edge.
+          'unsafe-inline' on script/style is required because this is a
+          static export with no server to mint a per-request nonce — Next's
+          own hydration scripts and styled-jsx/Tailwind runtime rely on
+          inline tags. Acceptable here because the site takes no user input
+          anywhere (no forms, no query-param rendering), so there's no
+          injection point for that laxer rule to actually exploit.
+        */}
+        <meta
+          httpEquiv="Content-Security-Policy"
+          content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+        />
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
+      </head>
       <body className="min-h-full flex flex-col bg-[#030014] text-slate-100">
         <CyberBackground />
         {children}
